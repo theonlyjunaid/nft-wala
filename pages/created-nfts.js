@@ -1,7 +1,23 @@
-import React from 'react';
 
-const CreatedNFTs = () => (
-  <div>createdNFTs</div>
-);
+import { useEffect, useState, useContext } from 'react';
 
-export default CreatedNFTs;
+import { NFTContext } from '../context/NFTContext';
+import { Loader, NFTCard } from '../components';
+
+const ListedNfts = () => {
+  const [nfts, setNfts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  if (isLoading) {
+    return (
+      <div className="flexStart min-h-screen">
+        <Loader />
+      </div>
+    );
+  }
+  return (
+    <div>ListedNfts</div>
+  );
+};
+
+export default ListedNfts;

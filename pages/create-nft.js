@@ -1,36 +1,59 @@
 import { useState, useMemo, useCallback, useContext } from 'react';
-import { create as ipfsHttpClient } from 'ipfs-http-client';
+// import { create as ipfsHttpClient } from 'ipfs-http-client';
+// import { create } from 'ipfs-http-client';
+import { create } from 'ipfs-http-client';
+import { Buffer } from 'buffer';
+
 import { useRouter } from 'next/router';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 
-// import { NFTContext } from '../context/NFTContext';
+import { useStorageUpload } from '@thirdweb-dev/react';
+import { NFTContext } from '../context/NFTContext';
 import { Button, Input, Loader } from '../components';
 import images from '../assets';
 
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
-
 const CreateItem = () => {
-  // const { createSale, isLoadingNFT } = useContext(NFTContext);
+  const { createSale, isLoadingNFT, uploadToIPFS } = useContext(NFTContext);
   const [fileUrl, setFileUrl] = useState(null);
   const { theme } = useTheme();
+  const { mutateAsync: upload } = useStorageUpload();
+
+  // const createNFT = async (formInput, router) => {
+  //   const { name, description, price } = formInput;
+  //   if (!name || !description || !price || !fileUrl) return;
+
+  //   const data = JSON.stringify({ name, description, image: fileUrl });
+  //   try {
+  //     const uploadUrl = await upload({
+  //       data: [data],
+  //       options: { uploadWithGatewayUrl: true, uploadWithoutDirectory: true },
+  //     });
+  //     console.log(uploadUrl);
+  //     await createSale(uploadUrl, price);
+  //     router.push('/');
+  //   } catch (error) {
+  //     console.log('Error uploading file: ', error);
+  //   }
+  // };
 
   const uploadToInfura = async (file) => {
     try {
-      const added = await client.add({ content: file });
+      const uploadUrl = await upload({
+        data: [file],
+        options: { uploadWithGatewayUrl: true, uploadWithoutDirectory: true },
+      });
 
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-
-      setFileUrl(url);
+      console.log(uploadUrl);
+      setFileUrl(uploadUrl);
     } catch (error) {
       console.log('Error uploading file: ', error);
     }
   };
 
   const onDrop = useCallback(async (acceptedFile) => {
-    setFileUrl(URL.createObjectURL(acceptedFile[0]) || null);
-    // await uploadToInfura(acceptedFile[0]);
+    await uploadToInfura(acceptedFile[0]);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
@@ -55,13 +78,16 @@ const CreateItem = () => {
   const createMarket = async () => {
     const { name, description, price } = formInput;
     if (!name || !description || !price || !fileUrl) return;
-    /* first, upload to IPFS */
+
     const data = JSON.stringify({ name, description, image: fileUrl });
     try {
-      const added = await client.add(data);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      // await createSale(url, formInput.price);
+      const uploadUrl = await upload({
+        data: [data],
+        options: { uploadWithGatewayUrl: true, uploadWithoutDirectory: true },
+      });
+      console.log(uploadUrl);
+
+      await createSale(uploadUrl, formInput.price, false, null);
       router.push('/');
     } catch (error) {
       console.log('Error uploading file: ', error);
