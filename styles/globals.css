@@ -5,11 +5,14 @@
 
 
 .nft-gradient {
-  background: linear-gradient(101.12deg, #EB1484 27.35%, #C91C)
+  background: linear-gradient(101.12deg, #55c713c4 27.35%, rgba(192, 183, 59, 0.8))
+}
+.nft-gradient-2{
+  background: linear-gradient(101.12deg, #55c713 27.35%, rgba(192, 183, 59, 0.865))
 }
 
 .white-bg {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.345);
 }
 
 .nav-h {

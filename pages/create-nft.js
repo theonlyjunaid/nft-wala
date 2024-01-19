@@ -1,9 +1,6 @@
 import { useState, useMemo, useCallback, useContext } from 'react';
 // import { create as ipfsHttpClient } from 'ipfs-http-client';
 // import { create } from 'ipfs-http-client';
-import { create } from 'ipfs-http-client';
-import { Buffer } from 'buffer';
-
 import { useRouter } from 'next/router';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
@@ -15,7 +12,7 @@ import { Button, Input, Loader } from '../components';
 import images from '../assets';
 
 const CreateItem = () => {
-  const { createSale, isLoadingNFT, uploadToIPFS } = useContext(NFTContext);
+  const { createSale, isLoadingNFT } = useContext(NFTContext);
   const [fileUrl, setFileUrl] = useState(null);
   const { theme } = useTheme();
   const { mutateAsync: upload } = useStorageUpload();
@@ -94,13 +91,13 @@ const CreateItem = () => {
     }
   };
 
-  // if (isLoadingNFT) {
-  //   return (
-  //     <div className="flexCenter" style={{ height: '51vh' }}>
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
+  if (isLoadingNFT) {
+    return (
+      <div className="flexCenter" style={{ height: '51vh' }}>
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center sm:px-4 p-12">

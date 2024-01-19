@@ -38,7 +38,7 @@ const PaymentBodyCmp = ({ nft, nftCurrency }) => (
 );
 
 const AssetDetails = () => {
-  const { nftCurrency, buyNFT, currentAccount, isLoadingNFT } = useContext(NFTContext);
+  const { nftCurrency, buyNFT, currentAccount } = useContext(NFTContext);
   const [nft, setNft] = useState({ image: '', itemId: '', name: '', owner: '', price: '', seller: '' });
   const [paymentModal, setPaymentModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
@@ -81,7 +81,7 @@ const AssetDetails = () => {
             <div className="relative w-12 h-12 minlg:w-20 minlg:h-20 mr-2">
               <Image src={images.creator2} objectFit="cover" className="rounded-full" />
             </div>
-            <p className="font-poppins dark:text-white text-nft-black-1 text-sm minlg:text-lg font-semibold">{shortenAddress(nft.seller)}</p>
+            <p className="font-poppins dark:text-white text-nft-black-1 text-sm minlg:text-lg font-semibold">{shortenAddress(nft.owner)}</p>
           </div>
         </div>
         <div className="mt-10 flex flex-col">
@@ -95,7 +95,7 @@ const AssetDetails = () => {
           </div>
         </div>
         <div className="flex flex-row sm:flex-col mt-10">
-          {currentAccount !== nft.seller.toLowerCase()
+          {currentAccount === nft.seller.toLowerCase()
             ? (
               <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-base border border-gray p-2">
                 You cannot buy your own NFT
@@ -158,7 +158,7 @@ const AssetDetails = () => {
           footer={(
             <div className="flexCenter flex-col">
               <Button
-                btnName="Check it out"
+                btnName="View NFT"
                 btnType="primary"
                 classStyles="sm:mr-0 sm:mb-5 rounded-xl"
                 handleClick={() => router.push('/my-nfts')}

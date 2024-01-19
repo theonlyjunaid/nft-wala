@@ -92,10 +92,12 @@ export const NFTProvider = ({ children }) => {
     const contract = new ethers.Contract(MarketAddress, MarketAddressABI, signer);
     const price = ethers.utils.parseUnits(formInputPrice, 'ether');
     console.log('Price is: ', price.toString());
+
     const listingPrice = await contract.getListingPrice();
     console.log('Listing price is: ', listingPrice.toString());
     console.log('URL is: ', url);
-    const transaction = await contract.createToken(url[0], price.toString(), { value: listingPrice.toString() });
+
+    const transaction = !isReselling ? await contract.createToken(url[0], price.toString(), { value: listingPrice.toString() }) : await contract.resellToken(id, price.toString(), { value: listingPrice.toString() });
     console.log('Mining... ', transaction.hash);
     await transaction.wait();
     console.log('Transaction is: ', transaction);
@@ -107,23 +109,30 @@ export const NFTProvider = ({ children }) => {
     const data = await contract.fetchMarketItems();
     console.log(data);
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await contract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        const price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-        const item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-        };
-        return item;
-      }),
-    );
-    console.log(items);
-    return items;
+    try {
+      const items = await Promise.all(
+        data.map(async (i) => {
+          const tokenUri = await contract.tokenURI(i.tokenId);
+          const meta = await axios.get(tokenUri);
+          const price = ethers.utils.formatUnits(i.price.toString(), 'ether');
+          const item = {
+            price,
+            tokenId: i.tokenId.toNumber(),
+            seller: i.seller,
+            owner: i.owner,
+            image: meta.data.image,
+            name: meta.data.name,
+            description: meta.data.description,
+          };
+          return item;
+        }),
+      );
+
+      console.log(items);
+      return items;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const fetchMyNFTsOrCreatedNFTs = async (type) => {
@@ -156,7 +165,7 @@ export const NFTProvider = ({ children }) => {
     const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
     const transaction = await contract.createMarketSale(nft.tokenId, { value: price });
     await transaction.wait();
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
