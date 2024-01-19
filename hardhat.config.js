@@ -1,15 +1,15 @@
-const fs = require('fs');
+// const fs = require('fs');
 
 require('@nomiclabs/hardhat-waffle');
 
-const privateKey = fs.readFileSync('.secret').toString().trim();
+// const privateKey = fs.readFileSync('.secret').toString().trim();
 
 module.exports = {
   networks: {
-    sepolia: {
-      url: 'https://sepolia.infura.io/v3/24793f88b43641c6a5add5226ea55548',
-      accounts: [privateKey],
-    },
+    // sepolia: {
+    //   url: 'https://sepolia.infura.io/v3/24793f88b43641c6a5add5226ea55548',
+    //   accounts: [privateKey],
+    // },
     hardhat: {
       chainId: 1337,
     },
