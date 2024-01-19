@@ -1,15 +1,16 @@
 // const fs = require('fs');
 
-require('@nomiclabs/hardhat-waffle');
+require('@nomiclabs/hardhat-ethers');
 
 // const privateKey = fs.readFileSync('.secret').toString().trim();
 
 module.exports = {
+  defaultNetwork: 'sepolia',
   networks: {
-    // sepolia: {
-    //   url: 'https://sepolia.infura.io/v3/24793f88b43641c6a5add5226ea55548',
-    //   accounts: [privateKey],
-    // },
+    sepolia: {
+      url: 'https://eth-sepolia.g.alchemy.com/v2/phODLHFjD-NE7Sbr5FVltpGn90zE3DI8',
+      accounts: ['99e5ddcb22c3e2ddd99edf637961329b2331bfa90a7a2517d7b38f2c16166b7a'],
+    },
     hardhat: {
       chainId: 1337,
     },

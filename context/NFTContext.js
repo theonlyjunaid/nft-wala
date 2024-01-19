@@ -2,30 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import axios from 'axios';
-// import { create as ipfsHttpClient } from 'ipfs-http-client';
-// import { useStorageUpload } from '@thirdweb-dev/react';
 
 import { MarketAddress, MarketAddressABI } from './constants';
-
-// const projectId = '24793f88b43641c6a5add5226ea55548'; // <---------- your Infura Project ID
-
-// const projectSecret = 'OZO2PQAJb2sdlHLViLGLXdARvrCaEEtou5fbdpCyjVsO2U0Q8TzCLw';
-// const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString('base64')}`;
-
-// // const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
-// const client = ipfsHttpClient({
-//   host: 'ipfs.infura.io',
-//   port: 5001,
-//   protocol: 'https',
-//   headers: {
-//     authorization: auth,
-//   },
-// });
 
 export const NFTContext = React.createContext();
 
 export const NFTProvider = ({ children }) => {
-  // const { mutateAsync: upload } = useStorageUpload();
   const [currentAccount, setCurrentAccount] = useState(null);
   const nftCurrency = 'ETH';
 
@@ -58,7 +40,6 @@ export const NFTProvider = ({ children }) => {
       console.log('Make sure you have metamask!');
       return;
     }
-    // console.log('We have the ethereum object', ethereum);
 
     try {
       if (typeof window.ethereum !== 'undefined') {
@@ -104,7 +85,8 @@ export const NFTProvider = ({ children }) => {
   };
 
   const fetchNFTs = async () => {
-    const provider = new ethers.providers.JsonRpcProvider();
+    const url = 'https://eth-sepolia.g.alchemy.com/v2/phODLHFjD-NE7Sbr5FVltpGn90zE3DI8';
+    const provider = new ethers.providers.JsonRpcProvider(url);
     const contract = new ethers.Contract(MarketAddress, MarketAddressABI, provider);
     const data = await contract.fetchMarketItems();
     console.log(data);
