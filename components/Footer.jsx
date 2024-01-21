@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 
+import Link from 'next/link';
 import images from '../assets';
 import Button from './Button';
 
@@ -45,11 +46,13 @@ const Footer = () => {
         <div className="flexBetween flex-row w-full minmd:w-4/5 sm:flex-col mt-7">
           <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base">NFTWala, Inc. All Rights Reserved</p>
           <div className="flex flex-row sm:mt-4">
-            {[images.instagram, images.twitter, images.telegram, images.discord].map((image, index) => (
-              <div className="mx-2 cursor-pointer" key={`image ${index}`}>
-                <Image src={image} key={index} objectFit="contain" width={24} height={24} alt="social" className={theme === 'light' ? 'filter invert' : undefined} />
-              </div>
-            ))}
+            {/* {[images.twitter].map((image, index) => ( */}
+            <div className="mx-2 cursor-pointer">
+              <Link href="https://twitter.com/the_onlyjunaid">
+                <Image src={images.twitter} objectFit="contain" width={24} height={24} alt="social" className={theme === 'light' ? 'filter invert' : undefined} />
+              </Link>
+            </div>
+            {/* ))} */}
           </div>
         </div>
       </div>
